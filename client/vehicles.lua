@@ -1,4 +1,5 @@
 -- Functions
+QBCore = exports['qb-core']:GetCoreObject()
 
 local function IsBackEngine(vehModel)
     return BackEngineVehicles[vehModel]

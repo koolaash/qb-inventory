@@ -177,6 +177,8 @@ RegisterNetEvent('qb-inventory:server:RobPlayer', function(TargetId)
 end)
 
 RegisterNetEvent('qb-inventory:client:openInventory', function(items, other)
+    local busy = exports["progressbar"]:isDoingSomething() -- dj edit
+    if busy then return end 
     SetNuiFocus(true, true)
     SendNUIMessage({
         action = 'open',
@@ -240,6 +242,37 @@ RegisterNUICallback('GiveItem', function(data, cb)
     else
         QBCore.Functions.Notify(Lang:t('notify.nonb'), 'error')
         cb(false)
+    end
+end)
+
+-- RegisterNUICallback('GiveItemAmount', function(data, cb)
+--     local input = lib.inputDialog('Enter Amount', {
+--         {type = 'number', label = 'Number input', description = 'Some number description', icon = 'hashtag'},
+--     })
+
+--     if input then
+--         -- print(tonumber(input[1]))
+--         cb(tonumber(input[1]))
+--     end
+-- end)
+
+RegisterNUICallback('GiveItemAmount', function(data, cb)
+    local dialog = exports['qb-input']:ShowInput({
+        header = "Enter Amount",
+        submitText = "Confirm",
+        inputs = {
+            {
+                text = "Enter Amount", -- text you want to be displayed as a place holder
+                name = "enteramount", -- name of the input should be unique otherwise it might override
+                type = "number", -- type of the input - number will not allow non-number characters in the field so only accepts 0-9
+                isRequired = true, -- Optional [accepted values: true | false] but will submit the form if no value is inputted
+                -- default = 1, -- Default number option, this is optional
+            },
+        },
+    })
+
+    if dialog then
+        cb(tonumber(dialog.enteramount))
     end
 end)
 
@@ -329,3 +362,11 @@ end
 
 RegisterKeyMapping('openInv', Lang:t('inf_mapping.opn_inv'), 'keyboard', Config.Keybinds.Open)
 RegisterKeyMapping('toggleHotbar', Lang:t('inf_mapping.tog_slots'), 'keyboard', Config.Keybinds.Hotbar)
+
+local itemToBeAdded = 'weapon_snowball'
+-- RegisterCommand('openInv2', function()
+--     TriggerServerEvent('inventory:server:addItem', itemToBeAdded)
+-- end)
+RegisterNetEvent('inventory:client:addItem', function(itemToBeAdded)
+    TriggerServerEvent('inventory:server:addItem', itemToBeAdded)
+end)

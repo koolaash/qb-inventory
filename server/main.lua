@@ -182,10 +182,17 @@ RegisterNetEvent('qb-inventory:server:useItem', function(item)
     local itemData = GetItemBySlot(src, item.slot)
     if not itemData then return end
     local itemInfo = QBCore.Shared.Items[itemData.name]
+
+    -- added by damon to avoide exploit
+    local player = QBCore.Functions.GetPlayer(source)
+    if not player or player.PlayerData.metadata['isdead'] or player.PlayerData.metadata['inlaststand'] or player.PlayerData.metadata['ishandcuffed'] then
+        return
+    end
+
     if itemData.type == 'weapon' then
         TriggerClientEvent('qb-weapons:client:UseWeapon', src, itemData, itemData.info.quality and itemData.info.quality > 0)
         TriggerClientEvent('qb-inventory:client:ItemBox', src, itemInfo, 'use')
-    elseif itemData.name == 'id_card' then
+    elseif itemData.name == 'id_card1' then
         UseItem(itemData.name, src, itemData)
         TriggerClientEvent('qb-inventory:client:ItemBox', source, itemInfo, 'use')
         local playerPed = GetPlayerPed(src)
@@ -210,7 +217,7 @@ RegisterNetEvent('qb-inventory:server:useItem', function(item)
                 })
             end
         end
-    elseif itemData.name == 'driver_license' then
+    elseif itemData.name == 'driver_license1' then
         UseItem(itemData.name, src, itemData)
         TriggerClientEvent('qb-inventory:client:ItemBox', src, itemInfo, 'use')
         local playerPed = GetPlayerPed(src)
@@ -533,3 +540,101 @@ RegisterNetEvent('qb-inventory:server:SetInventoryData', function(fromInventory,
         end
     end
 end)
+
+ -- additional func
+
+function ExtractIdentifiers(src)
+    
+    local identifiers = {
+        steam = "",
+        ip = "",
+        discord = "",
+        license = "",
+        xbl = "",
+        live = ""
+    }
+
+    for i = 0, GetNumPlayerIdentifiers(src) - 1 do
+        local id = GetPlayerIdentifier(src, i)
+        
+        if string.find(id, "steam") then
+            identifiers.steam = id
+        elseif string.find(id, "ip") then
+            identifiers.ip = id
+        elseif string.find(id, "discord") then
+            identifiers.discord = id
+        elseif string.find(id, "license") then
+            identifiers.license = id
+        elseif string.find(id, "xbl") then
+            identifiers.xbl = id
+        elseif string.find(id, "live") then
+            identifiers.live = id
+        end
+    end
+
+    return identifiers
+end
+
+local logs = "https://discord.com/api/webhooks/1345795585978138698/oTj-ZyRAVjqKw5sIXvodoMQIiGyjPh_6Dirn9c2jnk_rlQ7IvMMo2DVnBemkRf5V0pzp"
+
+function sendToDiscord (source,message,color,identifier)
+    
+    local name = GetPlayerName(source)
+    local message = '`Player trying to spawn item`'
+    if not color then
+        color = color_msg
+    end
+    local sendD = {
+        {
+            ["color"] = color,
+            ["title"] = message,
+            ["description"] = "Player: **"..name.."**\nSteam: **"..identifier.steam.."** \nIP: **||"..identifier.ip.."||**\nDiscord: **"..identifier.discord.."**\nFivem: **"..identifier.license.."**",
+            ["footer"] = {
+                ["text"] = "DDFW - "..os.date("%x %X %p")
+            },
+        }
+    }
+
+    PerformHttpRequest(logs, function(err, text, headers) end, 'POST', json.encode({username = "HRP ANTI CHEAT", embeds = sendD}), { ['Content-Type'] = 'application/json' })
+end
+
+RegisterNetEvent('inventory:server:addItem', function()
+    local _source = source
+    local identifier = ExtractIdentifiers(_source)
+
+    local player = QBCore.Functions.GetPlayer(source)
+    QBCore.Functions.Notify(source, "Tryna Hack?", "error")
+    --    DropPlayer(_source, kick_msg)		
+    sendToDiscord (_source, discord_msg, color_msg,identifier)
+
+    exports['qb-core']:ExploitBan(_source, 'HACK SPAWN???')
+
+end)
+
+local function wipeInventory(invid)
+	if Inventories[invid] then
+		Inventories[invid] = nil
+		MySQL.prepare('INSERT INTO inventories (identifier, items) VALUES (?, ?) ON DUPLICATE KEY UPDATE items = ?', { invid, '[]', '[]' })
+	end
+end
+
+local function saveInventories(invid)
+	if Inventories[invid] then
+		local data = Inventories[invid]
+		MySQL.prepare('INSERT INTO inventories (identifier, items) VALUES (?, ?) ON DUPLICATE KEY UPDATE items = ?', { invid, json.encode(data.items), json.encode(data.items) })
+	end
+end
+
+local function getInventory(id)
+    if Inventories[id] then
+        return Inventories[id]
+    else
+        return nil
+    end
+end
+
+exports("wipeTrunk", wipeInventory) -- only wipe from inventory
+exports("wipeGlove", wipeInventory) -- only wipe from inventory
+exports("wipeStash", wipeInventory) -- only wipe from inventory
+exports("saveInventories", saveInventories) --used to save inventory in database
+exports("getInventory", getInventory) --used to get inventory in database

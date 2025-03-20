@@ -1,4 +1,5 @@
 -- Commands
+QBCore = exports['qb-core']:GetCoreObject()
 
 QBCore.Commands.Add('giveitem', 'Give An Item (Admin Only)', { { name = 'id', help = 'Player ID' }, { name = 'item', help = 'Name of the item (not a label)' }, { name = 'amount', help = 'Amount of items' } }, false, function(source, args)
     local id = tonumber(args[1])
@@ -10,20 +11,30 @@ QBCore.Commands.Add('giveitem', 'Give An Item (Admin Only)', { { name = 'id', he
             -- check iteminfo
             local info = {}
             if itemData['name'] == 'id_card' then
-                info.citizenid = player.PlayerData.citizenid
-                info.firstname = player.PlayerData.charinfo.firstname
-                info.lastname = player.PlayerData.charinfo.lastname
-                info.birthdate = player.PlayerData.charinfo.birthdate
-                info.gender = player.PlayerData.charinfo.gender
-                info.nationality = player.PlayerData.charinfo.nationality
+                -- info.citizenid = player.PlayerData.citizenid
+                -- info.firstname = player.PlayerData.charinfo.firstname
+                -- info.lastname = player.PlayerData.charinfo.lastname
+                -- info.birthdate = player.PlayerData.charinfo.birthdate
+                -- info.gender = player.PlayerData.charinfo.gender
+                -- info.nationality = player.PlayerData.charinfo.nationality
+        exports['um-idcard']:CreateMetaLicense(source, "id_card")
+        QBCore.Functions.Notify(source, Lang:t('notify.yhg') .. GetPlayerName(id) .. ' ' .. amount .. ' ' .. itemData['name'] .. '', 'success')
+        TriggerClientEvent('qb-inventory:client:ItemBox', id, itemData, 'add', amount)
+        if Player(id).state.inv_busy then TriggerClientEvent('qb-inventory:client:updateInventory', id) end
+        return
             elseif itemData['name'] == 'driver_license' then
-                info.firstname = player.PlayerData.charinfo.firstname
-                info.lastname = player.PlayerData.charinfo.lastname
-                info.birthdate = player.PlayerData.charinfo.birthdate
-                info.type = 'Class C Driver License'
+                -- info.firstname = player.PlayerData.charinfo.firstname
+                -- info.lastname = player.PlayerData.charinfo.lastname
+                -- info.birthdate = player.PlayerData.charinfo.birthdate
+                -- info.type = 'Class C Driver License'
+        exports['um-idcard']:CreateMetaLicense(source, "driver_license")
+        QBCore.Functions.Notify(source, Lang:t('notify.yhg') .. GetPlayerName(id) .. ' ' .. amount .. ' ' .. itemData['name'] .. '', 'success')
+        TriggerClientEvent('qb-inventory:client:ItemBox', id, itemData, 'add', amount)
+        if Player(id).state.inv_busy then TriggerClientEvent('qb-inventory:client:updateInventory', id) end
+        return
             elseif itemData['type'] == 'weapon' then
                 amount = 1
-                info.serie = tostring(QBCore.Shared.RandomInt(2) .. QBCore.Shared.RandomStr(3) .. QBCore.Shared.RandomInt(1) .. QBCore.Shared.RandomStr(2) .. QBCore.Shared.RandomInt(3) .. QBCore.Shared.RandomStr(4))
+                info.serie = 'HRP_' .. tostring(QBCore.Shared.RandomInt(2) .. QBCore.Shared.RandomStr(3) .. QBCore.Shared.RandomInt(1) .. QBCore.Shared.RandomStr(2) .. QBCore.Shared.RandomInt(3) .. QBCore.Shared.RandomStr(4))
                 info.quality = 100
             elseif itemData['name'] == 'harness' then
                 info.uses = 20

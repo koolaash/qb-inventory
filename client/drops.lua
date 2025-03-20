@@ -2,6 +2,7 @@ HoldingDrop = false
 local bagObject = nil
 local heldDrop = nil
 CurrentDrop = nil
+QBCore = exports['qb-core']:GetCoreObject()
 
 -- Functions
 

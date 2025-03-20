@@ -3,55 +3,55 @@ VehicleStorage = {
         gloveboxSlots = 5,
         gloveboxWeight = 10000,
         trunkSlots = 35,
-        trunkWeight = 60000
+        trunkWeight = 500000
     },
     [0] = { -- Compacts
         gloveboxSlots = 5,
         gloveboxWeight = 10000,
         trunkSlots = 30,
-        trunkWeight = 38000
+        trunkWeight = 280000
     },
     [1] = { -- Sedans
         gloveboxSlots = 5,
         gloveboxWeight = 10000,
         trunkSlots = 40,
-        trunkWeight = 50000
+        trunkWeight = 250000
     },
     [2] = { -- SUVs
         gloveboxSlots = 5,
         gloveboxWeight = 10000,
         trunkSlots = 50,
-        trunkWeight = 75000
+        trunkWeight = 275000
     },
     [3] = { -- Coupes
         gloveboxSlots = 5,
         gloveboxWeight = 10000,
         trunkSlots = 35,
-        trunkWeight = 42000
+        trunkWeight = 142000
     },
     [4] = { -- Muscle
         gloveboxSlots = 5,
         gloveboxWeight = 10000,
         trunkSlots = 30,
-        trunkWeight = 38000
+        trunkWeight = 138000
     },
     [5] = { -- Sports Classics
         gloveboxSlots = 5,
         gloveboxWeight = 10000,
         trunkSlots = 25,
-        trunkWeight = 30000
+        trunkWeight = 130000
     },
     [6] = { -- Sports
         gloveboxSlots = 5,
         gloveboxWeight = 10000,
         trunkSlots = 25,
-        trunkWeight = 30000
+        trunkWeight = 130000
     },
     [7] = { -- Super
         gloveboxSlots = 5,
         gloveboxWeight = 10000,
         trunkSlots = 25,
-        trunkWeight = 30000
+        trunkWeight = 130000
     },
     [8] = { -- Motorcycles
         gloveboxSlots = 5,
@@ -63,13 +63,13 @@ VehicleStorage = {
         gloveboxSlots = 5,
         gloveboxWeight = 10000,
         trunkSlots = 35,
-        trunkWeight = 60000
+        trunkWeight = 260000
     },
     [12] = { -- Vans
         gloveboxSlots = 5,
         gloveboxWeight = 10000,
         trunkSlots = 35,
-        trunkWeight = 120000
+        trunkWeight = 1000000
     },
     [13] = { -- Cycles
         gloveboxSlots = 5,

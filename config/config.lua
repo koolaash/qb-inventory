@@ -2,7 +2,7 @@ Config = {
     UseTarget = GetConvar('UseTarget', 'false') == 'true',
 
     MaxWeight = 120000,
-    MaxSlots = 40,
+    MaxSlots = 60,
 
     StashSize = {
         maxweight = 2000000,
@@ -37,7 +37,7 @@ Config = {
     },
 
     VendingItems = {
-        { name = 'kurkakola',    price = 4, amount = 50 },
-        { name = 'water_bottle', price = 4, amount = 50 },
+        -- { name = 'kurkakola',    price = 100, amount = 50 },
+        -- { name = 'water_bottle', price = 100, amount = 50 },
     },
 }
